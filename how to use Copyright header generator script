@@ -1,0 +1,82 @@
+Powershell – Copyright header generator script
+
+1.	Create Copywright.ps file with the below contents:
+
+param($target = "D:\\Babloo\\Workspace\\KRIS-COE\\BitBucketCode\\api-app-icam")
+
+$header = "/*
+*  (©) 2022 KPMG LLP,a Delaware limited liability partnership and a member firm of the KPMG global organization of independent member firms affiliated with KPMG International Limited, a private English company limited by guarantee. All rights reserved
+*/"
+
+$headerForProperties = "#
+#  (©) 2022 KPMG LLP,a Delaware limited liability partnership and a member firm of the KPMG global organization of independent member firms affiliated with KPMG International Limited, a private English company limited by guarantee. All rights reserved
+#"
+
+function Write-Header ($file) {
+
+    $content = Get-Content $file
+
+    $filename = Split-Path -Leaf $file
+
+    $fileheader = $header -f $filename
+    Set-Content $file $fileheader
+
+    Add-Content $file $content
+}
+
+function Write-Header-Properties ($file) {
+
+    $content = Get-Content $file
+
+    $filename = Split-Path -Leaf $file
+
+    $fileheader = $headerForProperties -f $filename
+    Set-Content $file $fileheader
+
+    Add-Content $file $content
+}
+
+Get-ChildItem $target -Recurse | ? { $_.Extension -like ".java"}   | % {
+
+    Write-Header $_.PSPath.Split(":",3)[2]
+}
+Get-ChildItem $target -Recurse | ? { $_.Extension -like ".properties"}   | % {
+
+    Write-Header-Properties $_.PSPath.Split(":",3)[2]
+
+}
+
+
+NOTE : Change the path of your project according to your system :
+
+param($target = "D:\\Babloo\\Workspace\\KRIS-COE\\BitBucketCode\\api-app-icam")
+
+
+2.	In VS code while running the co-operate script it will give us the security violation issues. To counter that we must update setting.json with below configurations :
+
+"terminal.integrated.profiles.windows": {
+        "PowerShell": {
+          "source": "PowerShell",
+          "icon": "terminal-powershell",
+          "args": ["-ExecutionPolicy", "Bypass"]
+        }
+      }
+
+3.	Now Open the PowerShell and execute the power shell script. Use following commands:
+
+   .\Copyright.ps1 
+
+Output :
+Package level :
+ 
+
+Class Level :
+
+ 
+
+Properties Level :
+
+ 
+
+
+NOTE :  While adding header to json file, we are violating the json formatter principal and it will get impact in our implemented code base and response structure.
